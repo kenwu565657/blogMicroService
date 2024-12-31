@@ -10,11 +10,14 @@
 	</parent>
 	<packaging>pom</packaging>
 	<groupId>com.contentfarm</groupId>
-	<artifactId>root</artifactId>
+	<artifactId>contentfarm-root</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>root</name>
 	<description>Demo project for Spring Boot</description>
 	<modules>
+		<module>contentfarm-domain</module>
+		<module>contentfarm-persistence</module>
+		<module>contentfarm-service</module>
 		<module>contentfarm-core</module>
 		<module>contentfarm-gateway</module>
 		<module>contentfarm-utils</module>
