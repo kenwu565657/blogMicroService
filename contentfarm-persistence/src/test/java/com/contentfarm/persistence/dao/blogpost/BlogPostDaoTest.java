@@ -1,4 +1,4 @@
-package com.contentfarm.persistence.dao;
+package com.contentfarm.persistence.dao.blogpost;
 
 import jakarta.inject.Inject;
 import lombok.extern.log4j.Log4j2;

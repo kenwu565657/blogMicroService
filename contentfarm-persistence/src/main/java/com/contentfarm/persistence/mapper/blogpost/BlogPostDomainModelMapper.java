@@ -1,7 +1,7 @@
-package com.contentfarm.persistence.mapper;
+package com.contentfarm.persistence.mapper.blogpost;
 
 import com.contentfarm.contentfarmdomain.aggregateroot.blogpost.BlogPostDomainModel;
-import com.contentfarm.persistence.entity.BlogPostEntity;
+import com.contentfarm.persistence.entity.blogpost.BlogPostEntity;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,22 +1,14 @@
-package com.contentfarm.persistence.service;
+package com.contentfarm.persistence.service.blogpost;
 
 import com.contentfarm.contentfarmdomain.aggregateroot.blogpost.BlogPostDomainModel;
-import com.contentfarm.persistence.dao.BlogPostDao;
-import com.contentfarm.persistence.entity.BlogPostEntity;
-import com.contentfarm.persistence.mapper.BlogPostDomainModelMapper;
-import jakarta.inject.Inject;
-import org.junit.jupiter.api.AfterAll;
+import com.contentfarm.persistence.dao.blogpost.BlogPostDao;
+import com.contentfarm.persistence.entity.blogpost.BlogPostEntity;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,10 +16,8 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest

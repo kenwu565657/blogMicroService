@@ -4,4 +4,5 @@ import com.contentfarm.contentfarmdomain.aggregateroot.blogpost.BlogPostDomainMo
 
 public interface IBlogPostPersistenceQueryService {
     BlogPostDomainModel getById(String id);
+    Integer countByAuthorId(String authorId);
 }

@@ -1,5 +1,6 @@
-package com.contentfarm.persistence.searchcriteria;
+package com.contentfarm.persistence.searchcriteria.blogpost;
 
+import com.contentfarm.persistence.searchcriteria.BaseSearchCriteria;
 import lombok.experimental.SuperBuilder;
 
 @SuperBuilder

@@ -1,4 +1,4 @@
-package com.contentfarm.persistence.entity;
+package com.contentfarm.persistence.entity.blogpost;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -28,5 +30,11 @@ public class BlogPostEntity {
 
     @Column(name = "AUTHOR_ID")
     private String authorId;
+
+    @Column(name = "SUMMARY")
+    private String summary;
+
+    @Column(name = "CREATE_DATE_TIME")
+    private LocalDateTime createDateTime;
 
 }
