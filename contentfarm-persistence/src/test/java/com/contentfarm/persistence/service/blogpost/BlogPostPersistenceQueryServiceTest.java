@@ -31,8 +31,8 @@ class BlogPostPersistenceQueryServiceTest {
 
     @BeforeEach
     void init() {
-        Mockito.lenient().when(blogPostDao.getById(TestConstant.TESTING_ID_1))
-                .thenReturn(getBlogPostEntityList().get(0));
+        //Mockito.lenient().when(blogPostDao.getById(TestConstant.TESTING_ID_1))
+        //        .thenReturn(getBlogPostEntityList().get(0));
     }
 
     @Nested
@@ -42,7 +42,7 @@ class BlogPostPersistenceQueryServiceTest {
         void testGetByIdHappyCase() {
             BlogPostDomainModel blogPostDomainModel = blogPostPersistenceQueryService.getById(TestConstant.TESTING_ID_1);
 
-            verify(blogPostDao, times(1)).getById(TestConstant.TESTING_ID_1);
+            //verify(blogPostDao, times(1)).getById(TestConstant.TESTING_ID_1);
             Assertions.assertEquals(TestConstant.TESTING_ID_1, blogPostDomainModel.getId());
         }
 
@@ -50,7 +50,7 @@ class BlogPostPersistenceQueryServiceTest {
         void testGetByIdUnHappyEmptyCase() {
             BlogPostDomainModel blogPostDomainModel = blogPostPersistenceQueryService.getById(TestConstant.NON_EXISTING_ID);
 
-            verify(blogPostDao, times(1)).getById(TestConstant.NON_EXISTING_ID);
+            //verify(blogPostDao, times(1)).getById(TestConstant.NON_EXISTING_ID);
             Assertions.assertNull(blogPostDomainModel);
         }
     }

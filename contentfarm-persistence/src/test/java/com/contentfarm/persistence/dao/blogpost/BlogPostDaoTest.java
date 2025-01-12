@@ -31,4 +31,10 @@ class BlogPostDaoTest {
         Assertions.assertEquals(result.size(), (int) numberOfRecords);
     }
 
+    @Test
+    void testFindByAuthorId() {
+        var result = blogPostDao.findByAuthorId("testing_id");
+        Assertions.assertEquals(result.size(), (int) numberOfRecords);
+    }
+
 }

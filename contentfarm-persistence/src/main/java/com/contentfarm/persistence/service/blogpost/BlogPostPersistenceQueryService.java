@@ -8,6 +8,8 @@ import com.contentfarm.persistence.mapper.blogpost.BlogPostDomainModelMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class BlogPostPersistenceQueryService implements IBlogPostPersistenceQueryService {
@@ -17,13 +19,21 @@ public class BlogPostPersistenceQueryService implements IBlogPostPersistenceQuer
 
     @Override
     public BlogPostDomainModel getById(String id) {
-        BlogPostEntity blogPostEntity = blogPostDao.getById(id);
-        return blogPostDomainModelMapper.mapToBlogPostDomainModel(blogPostEntity);
+        return null;
+        //BlogPostEntity blogPostEntity = blogPostDao.getById(id);
+        //return blogPostDomainModelMapper.mapToBlogPostDomainModel(blogPostEntity);
     }
 
     @Override
     public Integer countByAuthorId(String authorId) {
-
+        return null;
     }
+
+    @Override
+    public List<BlogPostDomainModel> findByAuthorId(String authorId) {
+        List<BlogPostEntity> blogPostEntities = blogPostDao.findByAuthorId(authorId);
+        return blogPostDomainModelMapper.mapToBlogPostDomainModels(blogPostEntities);
+    }
+
 
 }

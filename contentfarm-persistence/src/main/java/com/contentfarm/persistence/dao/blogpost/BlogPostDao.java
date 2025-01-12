@@ -1,22 +1,21 @@
 package com.contentfarm.persistence.dao.blogpost;
 
+import com.contentfarm.persistence.dao.BaseDao;
 import com.contentfarm.persistence.entity.blogpost.BlogPostEntity;
+import com.querydsl.core.types.Predicate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface BlogPostDao extends JpaRepository<BlogPostEntity, String>, JpaSpecificationExecutor<BlogPostEntity> {
-    /*
-    Specification specification = ((root, query, criteriaBuilder) -> {
-       List<Predicate> predicates = new ArrayList<>();
-       predicates.add(criteriaBuilder.equal(root.get("id"), 1));
 
-       return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
-    });
+    List<BlogPostEntity> findByTitleContainingAndTitle(String title, String content);
 
-    Pageable pageable = PageRequest.of(0, 10);
-    Page<BlogPostEntity> page = this.findAll(specification, pageable);
+    List<BlogPostEntity> findByAuthorId(String authorId);
 
-     */
 }

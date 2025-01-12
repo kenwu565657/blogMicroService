@@ -4,6 +4,9 @@ import com.contentfarm.contentfarmdomain.aggregateroot.blogpost.BlogPostDomainMo
 import com.contentfarm.persistence.entity.blogpost.BlogPostEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class BlogPostDomainModelMapper {
 
@@ -17,6 +20,13 @@ public class BlogPostDomainModelMapper {
                 .title(blogPostEntity.getTitle())
                 .content(blogPostEntity.getContent())
                 .build();
+    }
+
+    public List<BlogPostDomainModel> mapToBlogPostDomainModels(List<BlogPostEntity> blogPostEntityList) {
+        if (blogPostEntityList == null || blogPostEntityList.isEmpty()) {
+            return List.of();
+        }
+        return blogPostEntityList.stream().parallel().map(this::mapToBlogPostDomainModel).collect(Collectors.toList());
     }
 
 }
