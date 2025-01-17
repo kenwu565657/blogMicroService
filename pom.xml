@@ -16,7 +16,9 @@
 	<description>Demo project for Spring Boot</description>
 	<modules>
 		<module>contentfarm-utils</module>
+		<module>contentfarm-middleware</module>
 		<module>blog-service</module>
+		<module>contentfarm-middleware</module>
 	</modules>
 	<url/>
 	<licenses>

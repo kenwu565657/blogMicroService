@@ -1,0 +1,1 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration = com.contentfarm.file.operation.springboot.starter.service.impl.AmazonS3FileStorageService

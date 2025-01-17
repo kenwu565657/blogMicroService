@@ -1,0 +1,7 @@
+file:
+  operation:
+    aws:
+      s3:
+        accessKey: <Your Key>
+        secretKey: <Your Key>
+        region: <Your Region>
