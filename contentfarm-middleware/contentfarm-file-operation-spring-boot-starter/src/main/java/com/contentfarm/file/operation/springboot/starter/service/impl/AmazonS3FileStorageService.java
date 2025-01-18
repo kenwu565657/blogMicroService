@@ -2,21 +2,26 @@ package com.contentfarm.file.operation.springboot.starter.service.impl;
 
 import com.contentfarm.file.operation.springboot.starter.config.AmazonS3AutoConfiguration;
 import com.contentfarm.file.operation.springboot.starter.config.AmazonS3Operation;
+import com.contentfarm.file.operation.springboot.starter.config.AmazonS3Properties;
 import com.contentfarm.file.operation.springboot.starter.service.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 
+@EnableConfigurationProperties(AmazonS3Properties.class)
 @Import(AmazonS3AutoConfiguration.class)
-@Primary
-@Component
+@Component("AmazonS3FileStorageService")
 public class AmazonS3FileStorageService implements FileStorageService {
 
-    @Autowired(required = false)
-    private AmazonS3Operation amazonS3Operation;
+    private final AmazonS3Operation amazonS3Operation;
+
+    public AmazonS3FileStorageService(AmazonS3Operation amazonS3Operation) {
+        this.amazonS3Operation = amazonS3Operation;
+    }
 
     @Override
     public void createDirectory(String directoryName) {
