@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: contentfarm-gateway
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins:
+              - '*'
+            allowed-methods:
+              - GET
+              - POST
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: blogpost-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/blogpost/**
+        - id: multimedia-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/multimedia/**
+        - id: search-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/search/**
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+springdoc:
+  enable-native-support: true
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - url: /v3/api-docs
+        name: API Gateway Service
+      - url: /blogpost-service/v3/api-docs
+        name: Blog Service
+
+
