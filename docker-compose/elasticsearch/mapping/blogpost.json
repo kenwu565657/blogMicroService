@@ -1,0 +1,14 @@
+{
+  "mappings": {
+    "properties": {
+      "content": {
+        "type": "text",
+        "index": "true"
+      },
+      "title": {
+        "type": "text",
+        "index": "true"
+      }
+    }
+  }
+}
