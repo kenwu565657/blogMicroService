@@ -1,13 +1,33 @@
 {
   "mappings": {
     "properties": {
-      "content": {
+      "id": {
         "type": "text",
-        "index": "true"
+        "index": false
       },
       "title": {
         "type": "text",
-        "index": "true"
+        "index": true
+      },
+      "tagList": {
+        "type": "text",
+        "index": true
+      },
+      "summary": {
+        "type": "text",
+        "index": true
+      },
+      "authorName": {
+        "type": "text",
+        "index": false
+      },
+      "postDate": {
+        "type": "text",
+        "index": false
+      },
+      "imageUrl": {
+        "type": "text",
+        "index": false
       }
     }
   }

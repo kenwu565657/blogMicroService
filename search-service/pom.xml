@@ -56,6 +56,10 @@
             <groupId>com.contentfarm</groupId>
             <artifactId>contentfarm-pojo</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.contentfarm</groupId>
+            <artifactId>contentfarm-feign</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
