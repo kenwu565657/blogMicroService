@@ -10,5 +10,5 @@ public class SearchResult<T> {
     private int searchResultCount;
     private long searchExecutionTimeInMs;
     private float maxSearchScore;
-    private List<T> searchResultList;
+    private List<T> searchResultItemList;
 }

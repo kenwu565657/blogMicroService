@@ -1,6 +1,9 @@
 spring:
   application:
     name: search-service
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
 
 eureka:
   client:

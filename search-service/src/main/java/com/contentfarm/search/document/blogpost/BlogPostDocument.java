@@ -2,6 +2,7 @@ package com.contentfarm.search.document.blogpost;
 
 import lombok.Data;
 import lombok.ToString;
+import lombok.experimental.FieldNameConstants;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -11,6 +12,7 @@ import java.util.List;
 @Data
 @ToString
 @Document(indexName = "blogpost", createIndex = false)
+@FieldNameConstants
 public class BlogPostDocument {
     @Id
     private String id;
@@ -18,7 +20,7 @@ public class BlogPostDocument {
     @Field(name = "title", type = FieldType.Text)
     private String title;
 
-    @Field(name = "tagList", type = FieldType.Text)
+    @Field(name = "tagList", type = FieldType.Keyword)
     private List<String> tagList;
 
     @Field(name = "summary", type = FieldType.Text)
