@@ -35,15 +35,18 @@ public class AmazonS3OperatorTest {
     private static final String TEST_FIlE_CLASS_PATH = "classpath:testingFile.txt";
     private static final String TEST_BUCKET_NAME_TEMPLATE = "my-test-bucket-{0}";
     private static final String TEST_FILE_NAME_TEMPLATE = "my-test-file-{0}";
+    private static final String TEST_FILE_NAME_WITH_PREFIX_PATH_TEMPLATE = "my-prefix/my-test-file-{0}";
     private int numberOfBuckets = 0;
     private String testingBucketName = null;
     private String testingFileName = null;
+    private String testingFileNameWithPrefixPath = null;
 
     @BeforeAll
     void setUp() {
         String randomNumber = UUID.randomUUID().toString();
         testingBucketName = MessageFormat.format(TEST_BUCKET_NAME_TEMPLATE, randomNumber);
         testingFileName = MessageFormat.format(TEST_FILE_NAME_TEMPLATE, randomNumber);
+        testingFileNameWithPrefixPath = MessageFormat.format(TEST_FILE_NAME_WITH_PREFIX_PATH_TEMPLATE, randomNumber);
     }
 
     @Order(1)
@@ -99,6 +102,30 @@ public class AmazonS3OperatorTest {
     @Test
     void testDeleteFile() {
         Assertions.assertDoesNotThrow(() -> amazonS3Operator.deleteFile(testingBucketName, testingFileName));
+    }
+
+    @Order(8)
+    @Test
+    void testUploadFileWithPrefixPath() {
+        try {
+            File testingFile = ResourceUtils.getFile(TEST_FIlE_CLASS_PATH);
+            Assertions.assertDoesNotThrow(() -> amazonS3Operator.uploadFile(testingBucketName, testingFileNameWithPrefixPath, testingFile));
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    @Order(9)
+    @Test
+    void testDownloadFileWithPrefixPath() {
+        byte[] byteArray = amazonS3Operator.downloadFile(testingBucketName, testingFileNameWithPrefixPath);
+        Assertions.assertNotNull(byteArray);
+    }
+
+    @Order(10)
+    @Test
+    void testDeleteFileWithPrefixPath() {
+        Assertions.assertDoesNotThrow(() -> amazonS3Operator.deleteFile(testingBucketName, testingFileNameWithPrefixPath));
     }
 
     @Order(Integer.MAX_VALUE)

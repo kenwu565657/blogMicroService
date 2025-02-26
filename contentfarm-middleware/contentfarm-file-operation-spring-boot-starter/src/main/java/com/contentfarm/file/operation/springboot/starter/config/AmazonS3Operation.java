@@ -20,5 +20,4 @@ public interface AmazonS3Operation {
     byte[] downloadFile(String bucketName, String fileName);
 
     void deleteFile(String bucketName, String fileName);
-
 }
