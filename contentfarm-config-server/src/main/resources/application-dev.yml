@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: contentfarm-config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/kenwu565657/blog-spring-cloud-config-repo
+server:
+  port: 8070
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
