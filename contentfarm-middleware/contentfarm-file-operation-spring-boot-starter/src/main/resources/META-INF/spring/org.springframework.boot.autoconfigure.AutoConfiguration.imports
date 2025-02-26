@@ -1,0 +1,2 @@
+com.contentfarm.file.operation.springboot.starter.config.AmazonS3AutoConfiguration
+com.contentfarm.file.operation.springboot.starter.config.FileStorageServiceAutoConfiguration
