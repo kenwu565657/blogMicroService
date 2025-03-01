@@ -10,7 +10,7 @@
         "index": true
       },
       "tagList": {
-        "type": "text",
+        "type": "keyword",
         "index": true
       },
       "summary": {

@@ -1,0 +1,22 @@
+services:
+  postgres:
+    container_name: ${PROJECT_NAME}-postgres
+    image: postgres:${POSTGRES_VERSION}
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres-network
+
+networks:
+  postgres-network:
+    driver: bridge
+
+volumes:
+  db-data:

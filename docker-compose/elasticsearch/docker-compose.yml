@@ -1,0 +1,37 @@
+services:
+  elasticsearch:
+    image: elasticsearch:${ELASTICSEARCH_VERSION}
+    container_name: ${PROJECT_NAME}-elasticsearch
+    restart: always
+    environment:
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+      discovery.type: single-node
+    volumes:
+      - data:/var/lib/elasticsearch/data
+      - logs:/var/lib/elasticsearch/logs
+      - plugins:/var/lib/elasticsearch/plugins
+    ports:
+      - "9200:9200"
+    networks:
+      - elasticsearch-network
+  kibana:
+    image: kibana:${KIBANA_VERSION}
+    container_name: ${PROJECT_NAME}-kibana
+    depends_on:
+      - elasticsearch
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200/
+      ELASTICSEARCH_URL: http://elasticsearch:9200/
+    ports:
+      - "5601:5601"
+    networks:
+      - elasticsearch-network
+
+networks:
+  elasticsearch-network:
+    driver: bridge
+
+volumes:
+  data:
+  logs:
+  plugins:
