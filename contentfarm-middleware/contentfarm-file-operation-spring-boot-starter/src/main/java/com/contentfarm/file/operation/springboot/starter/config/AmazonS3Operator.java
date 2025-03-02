@@ -3,6 +3,7 @@ package com.contentfarm.file.operation.springboot.starter.config;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.ResponseBytes;
+import software.amazon.awssdk.core.async.AsyncResponseTransformer;
 import software.amazon.awssdk.core.sync.ResponseTransformer;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
@@ -92,6 +93,23 @@ public class AmazonS3Operator implements AmazonS3Operation {
         } catch (NoSuchKeyException e1) {
             return null;
         }
+    }
+
+    @Override
+    public CompletableFuture<byte[]> downloadFileAsync(String bucketName, String fileName) {
+        GetObjectRequest getObjectRequest = GetObjectRequest
+                .builder()
+                .key(fileName)
+                .bucket(bucketName)
+                .build();
+
+        CompletableFuture<ResponseBytes<GetObjectResponse>> getObjectResponseCompletableFuture =
+                s3AsyncClient.getObject(
+                        getObjectRequest,
+                        AsyncResponseTransformer.toBytes()
+                );
+
+        return getObjectResponseCompletableFuture.thenApply(ResponseBytes::asByteArray);
     }
 
     @Override

@@ -11,18 +11,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.UUID;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@EnableConfigurationProperties
 @SpringBootTest(classes = {AmazonS3FileStorageServiceTestConfiguration.class})
 class AmazonS3FileStorageServiceTest {
 
@@ -38,6 +37,13 @@ class AmazonS3FileStorageServiceTest {
         testingDirectoryName = MessageFormat.format(TEST_DIRECTORY_NAME_TEMPLATE, randomNumber);
         testingFileName = MessageFormat.format(TEST_FILE_NAME_TEMPLATE, randomNumber);
         testingFileNameWithPrefix = MessageFormat.format(TEST_FILE_NAME_WITH_PREFIX_TEMPLATE, randomNumber);
+
+        try {
+            File testingFile = ResourceUtils.getFile(TEST_FIlE_CLASS_PATH);
+            testingTxtFileContent = Files.readAllBytes(testingFile.toPath());
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 
     @Order(1)
@@ -62,6 +68,15 @@ class AmazonS3FileStorageServiceTest {
     void downloadFile() {
         byte[] byteArray = amazonS3FileStorageService.downloadFile(testingDirectoryName, testingFileName);
         Assertions.assertNotNull(byteArray);
+        Assertions.assertArrayEquals(testingTxtFileContent, byteArray);
+    }
+
+    @Order(3)
+    @Test
+    void downloadFileAsync() {
+        byte[] byteArray = amazonS3FileStorageService.downloadFileAsync(testingDirectoryName, testingFileName).join();
+        Assertions.assertNotNull(byteArray);
+        Assertions.assertArrayEquals(testingTxtFileContent, byteArray);
     }
 
     @Order(4)
@@ -86,6 +101,15 @@ class AmazonS3FileStorageServiceTest {
     void downloadFileWithPrefix() {
         byte[] byteArray = amazonS3FileStorageService.downloadFile(testingDirectoryName, testingFileNameWithPrefix);
         Assertions.assertNotNull(byteArray);
+        Assertions.assertArrayEquals(testingTxtFileContent, byteArray);
+    }
+
+    @Order(6)
+    @Test
+    void downloadFileWithPrefixAsync() {
+        byte[] byteArray = amazonS3FileStorageService.downloadFileAsync(testingDirectoryName, testingFileNameWithPrefix).join();
+        Assertions.assertNotNull(byteArray);
+        Assertions.assertArrayEquals(testingTxtFileContent, byteArray);
     }
 
     @Order(7)
@@ -107,4 +131,5 @@ class AmazonS3FileStorageServiceTest {
     private String testingDirectoryName = null;
     private String testingFileName = null;
     private String testingFileNameWithPrefix = null;
+    private byte[] testingTxtFileContent = null;
 }

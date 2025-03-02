@@ -4,13 +4,12 @@ import com.contentfarm.file.operation.springboot.starter.config.AmazonS3AutoConf
 import com.contentfarm.file.operation.springboot.starter.config.AmazonS3Operation;
 import com.contentfarm.file.operation.springboot.starter.config.AmazonS3Properties;
 import com.contentfarm.file.operation.springboot.starter.service.FileStorageService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.concurrent.CompletableFuture;
 
 @EnableConfigurationProperties(AmazonS3Properties.class)
 @Import(AmazonS3AutoConfiguration.class)
@@ -41,6 +40,11 @@ public class AmazonS3FileStorageService implements FileStorageService {
     @Override
     public byte[] downloadFile(String directoryName, String fileName) {
         return amazonS3Operation.downloadFile(directoryName, fileName);
+    }
+
+    @Override
+    public CompletableFuture<byte[]> downloadFileAsync(String directoryName, String fileName) {
+        return amazonS3Operation.downloadFileAsync(directoryName, fileName);
     }
 
     @Override
