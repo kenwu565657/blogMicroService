@@ -1,5 +1,7 @@
 package com.contentfarm.file.operation.springboot.starter.config;
 
+import com.contentfarm.file.operation.springboot.starter.exception.FileOperationException;
+import com.contentfarm.file.operation.springboot.starter.pojo.AsyncOperationResult;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
@@ -36,6 +38,8 @@ public class AmazonS3OperatorTest {
     private static final String TEST_BUCKET_NAME_TEMPLATE = "my-test-bucket-{0}";
     private static final String TEST_FILE_NAME_TEMPLATE = "my-test-file-{0}";
     private static final String TEST_FILE_NAME_WITH_PREFIX_PATH_TEMPLATE = "my-prefix/my-test-file-{0}";
+    private final String invalidBucketName = "invalidBucketName";
+    private final String invalidFileName = "invalidFileName";
     private int numberOfBuckets = 0;
     private String testingBucketName = null;
     private String testingTxtFileName = null;
@@ -124,6 +128,20 @@ public class AmazonS3OperatorTest {
 
     @Order(6)
     @Test
+    void testDownloadFile_invalidBucketName() {
+        FileOperationException fileOperationException = Assertions.assertThrows(FileOperationException.class, () -> amazonS3Operator.downloadFile(invalidBucketName, testingTxtFileName));
+        Assertions.assertEquals("File Directory Not Exist.", fileOperationException.getMessage());
+    }
+
+    @Order(6)
+    @Test
+    void testDownloadFile_invalidFileName() {
+        FileOperationException fileOperationException = Assertions.assertThrows(FileOperationException.class, () -> amazonS3Operator.downloadFile(testingBucketName, invalidFileName));
+        Assertions.assertEquals("File Name Not Exist.", fileOperationException.getMessage());
+    }
+
+    @Order(6)
+    @Test
     void testDownloadTxtFile() {
         byte[] byteArray = amazonS3Operator.downloadFile(testingBucketName, testingTxtFileName);
         Assertions.assertNotNull(byteArray);
@@ -133,9 +151,33 @@ public class AmazonS3OperatorTest {
     @Order(6)
     @Test
     void testDownloadTxtFileAsync() {
-        byte[] byteArray = amazonS3Operator.downloadFileAsync(testingBucketName, testingTxtFileName).join();
-        Assertions.assertNotNull(byteArray);
-        Assertions.assertArrayEquals(testingTxtFileContent, byteArray);
+        AsyncOperationResult<byte[]> asyncOperationResult = amazonS3Operator.downloadFileAsync(testingBucketName, testingTxtFileName).join();
+        Assertions.assertTrue(asyncOperationResult.isSuccess());
+        Assertions.assertNotNull(asyncOperationResult.getData());
+        Assertions.assertNull(asyncOperationResult.getFailCause());
+        Assertions.assertArrayEquals(testingTxtFileContent, asyncOperationResult.getData());
+    }
+
+    @Order(6)
+    @Test
+    void testDownloadFileAsync_invalidBucketName() {
+        AsyncOperationResult<byte[]> asyncOperationResult = amazonS3Operator.downloadFileAsync(invalidBucketName, testingTxtFileName).join();
+        Assertions.assertFalse(asyncOperationResult.isSuccess());
+        Assertions.assertNotNull(asyncOperationResult.getFailCause());
+        Assertions.assertNull(asyncOperationResult.getData());
+        Assertions.assertInstanceOf(FileOperationException.class, asyncOperationResult.getFailCause());
+        Assertions.assertEquals("File Directory Not Exist.", asyncOperationResult.getFailCause().getMessage());
+    }
+
+    @Order(6)
+    @Test
+    void testDownloadFileAsync_invalidFileName() {
+        AsyncOperationResult<byte[]> asyncOperationResult = amazonS3Operator.downloadFileAsync(invalidBucketName, testingTxtFileName).join();
+        Assertions.assertFalse(asyncOperationResult.isSuccess());
+        Assertions.assertNotNull(asyncOperationResult.getFailCause());
+        Assertions.assertNull(asyncOperationResult.getData());
+        Assertions.assertInstanceOf(FileOperationException.class, asyncOperationResult.getFailCause());
+        Assertions.assertEquals("File Directory Not Exist.", asyncOperationResult.getFailCause().getMessage());
     }
 
     @Order(6)
@@ -149,9 +191,11 @@ public class AmazonS3OperatorTest {
     @Order(6)
     @Test
     void testDownloadPngFileAsync() {
-        byte[] byteArray = amazonS3Operator.downloadFileAsync(testingBucketName, testingPngFileName).join();
-        Assertions.assertNotNull(byteArray);
-        Assertions.assertArrayEquals(testingPngFileContent, byteArray);
+        var asyncResult = amazonS3Operator.downloadFileAsync(testingBucketName, testingPngFileName).join();
+        Assertions.assertTrue(asyncResult.isSuccess());
+        Assertions.assertNotNull(asyncResult.getData());
+        Assertions.assertNull(asyncResult.getFailCause());
+        Assertions.assertArrayEquals(testingPngFileContent, asyncResult.getData());
     }
 
     @Order(7)
@@ -194,9 +238,11 @@ public class AmazonS3OperatorTest {
     @Order(9)
     @Test
     void testDownloadTxtFileAsyncWithPrefixPath() {
-        byte[] byteArray = amazonS3Operator.downloadFileAsync(testingBucketName, testingTxtFileNameWithPrefixPath).join();
-        Assertions.assertNotNull(byteArray);
-        Assertions.assertArrayEquals(testingTxtFileContent, byteArray);
+        AsyncOperationResult<byte[]> asyncOperationResult = amazonS3Operator.downloadFileAsync(testingBucketName, testingTxtFileNameWithPrefixPath).join();
+        Assertions.assertTrue(asyncOperationResult.isSuccess());
+        Assertions.assertNotNull(asyncOperationResult.getData());
+        Assertions.assertNull(asyncOperationResult.getFailCause());
+        Assertions.assertArrayEquals(testingTxtFileContent, asyncOperationResult.getData());
     }
 
     @Order(9)
@@ -210,9 +256,11 @@ public class AmazonS3OperatorTest {
     @Order(9)
     @Test
     void testDownloadPngFileAsyncWithPrefixPath() {
-        byte[] byteArray = amazonS3Operator.downloadFileAsync(testingBucketName, testingPngFileNameWithPrefixPath).join();
-        Assertions.assertNotNull(byteArray);
-        Assertions.assertArrayEquals(testingPngFileContent, byteArray);
+        AsyncOperationResult<byte[]> asyncOperationResult = amazonS3Operator.downloadFileAsync(testingBucketName, testingPngFileNameWithPrefixPath).join();
+        Assertions.assertTrue(asyncOperationResult.isSuccess());
+        Assertions.assertNotNull(asyncOperationResult.getData());
+        Assertions.assertNull(asyncOperationResult.getFailCause());
+        Assertions.assertArrayEquals(testingPngFileContent, asyncOperationResult.getData());
     }
 
     @Order(10)

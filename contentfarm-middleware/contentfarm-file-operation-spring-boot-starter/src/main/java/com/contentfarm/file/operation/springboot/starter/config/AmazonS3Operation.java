@@ -1,5 +1,6 @@
 package com.contentfarm.file.operation.springboot.starter.config;
 
+import com.contentfarm.file.operation.springboot.starter.pojo.AsyncOperationResult;
 import software.amazon.awssdk.services.s3.model.Bucket;
 
 import java.io.File;
@@ -20,7 +21,7 @@ public interface AmazonS3Operation {
 
     byte[] downloadFile(String bucketName, String fileName);
 
-    CompletableFuture<byte[]> downloadFileAsync(String bucketName, String fileName);
+    CompletableFuture<AsyncOperationResult<byte[]>> downloadFileAsync(String bucketName, String fileName);
 
     void deleteFile(String bucketName, String fileName);
 }

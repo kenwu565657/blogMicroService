@@ -1,5 +1,7 @@
 package com.contentfarm.file.operation.springboot.starter.service.impl;
 
+import com.contentfarm.file.operation.springboot.starter.exception.FileOperationException;
+import com.contentfarm.file.operation.springboot.starter.pojo.AsyncOperationResult;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
@@ -74,9 +76,31 @@ class AmazonS3FileStorageServiceTest {
     @Order(3)
     @Test
     void downloadFileAsync() {
-        byte[] byteArray = amazonS3FileStorageService.downloadFileAsync(testingDirectoryName, testingFileName).join();
-        Assertions.assertNotNull(byteArray);
-        Assertions.assertArrayEquals(testingTxtFileContent, byteArray);
+        var asyncResult = amazonS3FileStorageService.downloadFileAsync(testingDirectoryName, testingFileName).join();
+        Assertions.assertNotNull(asyncResult.getData());
+        Assertions.assertArrayEquals(testingTxtFileContent, asyncResult.getData());
+    }
+
+    @Order(3)
+    @Test
+    void downloadFileAsync_invalidBucketName() {
+        AsyncOperationResult<byte[]> asyncOperationResult = amazonS3FileStorageService.downloadFileAsync("invalidName", testingFileName).join();
+        Assertions.assertFalse(asyncOperationResult.isSuccess());
+        Assertions.assertNotNull(asyncOperationResult.getFailCause());
+        Assertions.assertNull(asyncOperationResult.getData());
+        Assertions.assertInstanceOf(FileOperationException.class, asyncOperationResult.getFailCause());
+        Assertions.assertEquals("File Directory Not Exist.", asyncOperationResult.getFailCause().getMessage());
+    }
+
+    @Order(3)
+    @Test
+    void downloadFileAsync_invalidFileName() {
+        AsyncOperationResult<byte[]> asyncOperationResult = amazonS3FileStorageService.downloadFileAsync(testingDirectoryName, "invalidName").join();
+        Assertions.assertFalse(asyncOperationResult.isSuccess());
+        Assertions.assertNotNull(asyncOperationResult.getFailCause());
+        Assertions.assertNull(asyncOperationResult.getData());
+        Assertions.assertInstanceOf(FileOperationException.class, asyncOperationResult.getFailCause());
+        Assertions.assertEquals("File Name Not Exist.", asyncOperationResult.getFailCause().getMessage());
     }
 
     @Order(4)
@@ -107,9 +131,33 @@ class AmazonS3FileStorageServiceTest {
     @Order(6)
     @Test
     void downloadFileWithPrefixAsync() {
-        byte[] byteArray = amazonS3FileStorageService.downloadFileAsync(testingDirectoryName, testingFileNameWithPrefix).join();
-        Assertions.assertNotNull(byteArray);
-        Assertions.assertArrayEquals(testingTxtFileContent, byteArray);
+        AsyncOperationResult<byte[]> asyncOperationResult = amazonS3FileStorageService.downloadFileAsync(testingDirectoryName, testingFileNameWithPrefix).join();
+        Assertions.assertTrue(asyncOperationResult.isSuccess());
+        Assertions.assertNotNull(asyncOperationResult.getData());
+        Assertions.assertNull(asyncOperationResult.getFailCause());
+        Assertions.assertArrayEquals(testingTxtFileContent, asyncOperationResult.getData());
+    }
+
+    @Order(6)
+    @Test
+    void downloadFileWithPrefixAsync_invalidBucketName() {
+        AsyncOperationResult<byte[]> asyncOperationResult = amazonS3FileStorageService.downloadFileAsync("invalidName", testingFileNameWithPrefix).join();
+        Assertions.assertFalse(asyncOperationResult.isSuccess());
+        Assertions.assertNotNull(asyncOperationResult.getFailCause());
+        Assertions.assertNull(asyncOperationResult.getData());
+        Assertions.assertInstanceOf(FileOperationException.class, asyncOperationResult.getFailCause());
+        Assertions.assertEquals("File Directory Not Exist.", asyncOperationResult.getFailCause().getMessage());
+    }
+
+    @Order(6)
+    @Test
+    void downloadFileWithPrefixAsync_invalidFileName() {
+        AsyncOperationResult<byte[]> asyncOperationResult = amazonS3FileStorageService.downloadFileAsync(testingDirectoryName, "invalidName").join();
+        Assertions.assertFalse(asyncOperationResult.isSuccess());
+        Assertions.assertNotNull(asyncOperationResult.getFailCause());
+        Assertions.assertNull(asyncOperationResult.getData());
+        Assertions.assertInstanceOf(FileOperationException.class, asyncOperationResult.getFailCause());
+        Assertions.assertEquals("File Name Not Exist.", asyncOperationResult.getFailCause().getMessage());
     }
 
     @Order(7)

@@ -1,5 +1,7 @@
 package com.contentfarm.file.operation.springboot.starter.config;
 
+import com.contentfarm.file.operation.springboot.starter.exception.FileOperationException;
+import com.contentfarm.file.operation.springboot.starter.pojo.AsyncOperationResult;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.ResponseBytes;
@@ -12,6 +14,7 @@ import software.amazon.awssdk.services.s3.model.Bucket;
 import software.amazon.awssdk.services.s3.model.DeleteBucketRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 import software.amazon.awssdk.services.s3.waiters.S3Waiter;
@@ -21,6 +24,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 public class AmazonS3Operator implements AmazonS3Operation {
     private final S3Client s3Client;
@@ -91,12 +95,14 @@ public class AmazonS3Operator implements AmazonS3Operation {
             ResponseBytes<GetObjectResponse> objectBytes = s3Client.getObject(objectRequest, ResponseTransformer.toBytes());
             return objectBytes.asByteArray();
         } catch (NoSuchKeyException e1) {
-            return null;
+            throw FileOperationException.ofFileNameNotExist();
+        } catch (NoSuchBucketException e2) {
+            throw FileOperationException.ofDirectoryNotExist();
         }
     }
 
     @Override
-    public CompletableFuture<byte[]> downloadFileAsync(String bucketName, String fileName) {
+    public CompletableFuture<AsyncOperationResult<byte[]>> downloadFileAsync(String bucketName, String fileName) {
         GetObjectRequest getObjectRequest = GetObjectRequest
                 .builder()
                 .key(fileName)
@@ -108,8 +114,25 @@ public class AmazonS3Operator implements AmazonS3Operation {
                         getObjectRequest,
                         AsyncResponseTransformer.toBytes()
                 );
-
-        return getObjectResponseCompletableFuture.thenApply(ResponseBytes::asByteArray);
+        return getObjectResponseCompletableFuture
+                    .thenApply(ResponseBytes::asByteArray)
+                    .handle((result, exception) -> {
+                        if (exception != null) {
+                            if (exception instanceof CompletionException completionException) {
+                                if (completionException.getCause() instanceof NoSuchKeyException) {
+                                    return AsyncOperationResult.ofFailure(FileOperationException.ofFileNameNotExist());
+                                }
+                                if (completionException.getCause() instanceof NoSuchBucketException) {
+                                    return AsyncOperationResult.ofFailure(FileOperationException.ofDirectoryNotExist());
+                                }
+                                return AsyncOperationResult.ofFailure(FileOperationException.ofUnexpectedError());
+                            }
+                            return AsyncOperationResult.ofFailure(exception);
+                        }
+                        else {
+                            return AsyncOperationResult.ofSuccess(result);
+                        }
+                    });
     }
 
     @Override
