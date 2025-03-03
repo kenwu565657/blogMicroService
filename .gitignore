@@ -35,3 +35,7 @@ build/
 ### Docker
 /docker-compose/data/
 /docker-compose/logs/
+
+### secret
+**/.s3.secret.env
+**/.s3.secret.*.env

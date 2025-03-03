@@ -1,6 +1,7 @@
 package com.contentfarm.multimedia.service.image;
 
+import reactor.core.publisher.Mono;
+
 public interface IMultimediaImageDownloadService {
-    byte[] download(String imageUrl);
-    byte[] download(String directory, String imageName);
+    Mono<byte[]> downloadAsync(String directory, String imageName);
 }

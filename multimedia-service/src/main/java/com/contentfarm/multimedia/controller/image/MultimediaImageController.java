@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import reactor.core.publisher.Mono;
 
 @Controller
@@ -18,9 +17,8 @@ public class MultimediaImageController implements MultimediaServiceFeign {
     private final IMultimediaImageDownloadService multimediaImageDownloadService;
 
     @Override
-    //@ResponseBody
-    //@GetMapping(value = "/{fileName}", produces = "image/png+jpeg")
+    @GetMapping(value = "/{fileName}", produces = "image/png+jpeg")
     public Mono<byte[]> getMultimediaImageByFileName(@PathVariable String fileName) {
-        return Mono.just(multimediaImageDownloadService.download("contentfarmblogpost", "image/" + fileName));
+        return multimediaImageDownloadService.downloadAsync("contentfarmblogpost", "image/" + fileName);
     }
 }
