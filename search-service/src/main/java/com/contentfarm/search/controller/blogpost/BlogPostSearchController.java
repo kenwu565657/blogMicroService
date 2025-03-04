@@ -6,6 +6,7 @@ import com.contentfarm.feign.feign.SearchServiceFeign;
 import com.contentfarm.search.mapping.blogpost.BlogPostMapper;
 import com.contentfarm.search.service.blogpost.IBlogPostSearchService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +33,13 @@ public class BlogPostSearchController implements SearchServiceFeign {
         }
         var searchResult = blogPostSearchService.searchBlogPostByTagList(tagList);
         return BlogPostMapper.toSearchResult(searchResult);
+    }
+
+    @GetMapping(value = "/{id}", produces = "application/json")
+    @Override
+    public BlogPostSearchResultDto getBlogPostById(@PathVariable("id") String id) {
+        var blogPostDocument = blogPostSearchService.getBlogPostById(id);
+        return BlogPostMapper.toBlogPostSearchResultDto(blogPostDocument);
     }
 
     @GetMapping(value = "")

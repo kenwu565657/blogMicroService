@@ -7,8 +7,8 @@ import java.util.List;
 @Getter
 @Setter
 public class SearchResult<T> {
-    private int searchResultCount;
-    private long searchExecutionTimeInMs;
-    private float maxSearchScore;
+    private Integer searchResultCount;
+    private Long searchExecutionTimeInMs;
+    private Float maxSearchScore;
     private List<T> searchResultItemList;
 }

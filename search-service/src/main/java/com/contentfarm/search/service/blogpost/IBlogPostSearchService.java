@@ -8,7 +8,7 @@ import java.util.List;
 public interface IBlogPostSearchService {
     SearchHits<BlogPostDocument> searchAllBlogPost();
 
-    SearchHits<BlogPostDocument> searchBlogPostByKeyword(String keyword);
+    BlogPostDocument getBlogPostById(String id);
 
     SearchHits<BlogPostDocument> searchBlogPostByKeywordAndPageNumberAndPageSize(String keyword, Integer pageNumber, Integer pageSize);
 

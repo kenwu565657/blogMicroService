@@ -4,6 +4,7 @@ import com.contentfarm.dto.blogpost.BlogPostSearchResultDto;
 import com.contentfarm.dto.common.SearchResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -17,6 +18,9 @@ public interface SearchServiceFeign {
 
     @GetMapping(value = "/blogpost", produces = "application/json", params = "tagList")
     SearchResult<BlogPostSearchResultDto> searchBlogPostByTagList(@RequestParam("tagList") List<String> tagList);
+
+    @GetMapping(value = "/blogpost/{id}", produces = "application/json")
+    BlogPostSearchResultDto getBlogPostById(@PathVariable("id") String id);
 
     @GetMapping(value = "/blogpost", produces = "application/json")
     SearchResult<BlogPostSearchResultDto> searchAllBlogPost();

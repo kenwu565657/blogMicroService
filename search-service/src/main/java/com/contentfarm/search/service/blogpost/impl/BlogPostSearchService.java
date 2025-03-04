@@ -5,9 +5,8 @@ import co.elastic.clients.elasticsearch._types.query_dsl.MultiMatchQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.TermQuery;
 import com.contentfarm.search.document.blogpost.BlogPostDocument;
+import com.contentfarm.search.exception.DocumentNotFoundException;
 import com.contentfarm.search.service.blogpost.IBlogPostSearchService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -27,10 +26,9 @@ import java.util.List;
 
 @Service
 public class BlogPostSearchService implements IBlogPostSearchService {
-
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final SearchOperations searchOperations;
     private final ElasticsearchOperations elasticsearchOperations;
+    private final Pageable defaultPageable = PageRequest.of(0, 20);
 
     public BlogPostSearchService(SearchOperations searchOperations, ElasticsearchOperations elasticsearchOperations) {
         this.searchOperations = searchOperations;
@@ -39,26 +37,25 @@ public class BlogPostSearchService implements IBlogPostSearchService {
 
     @Override
     public SearchHits<BlogPostDocument> searchAllBlogPost() {
-        NativeQuery nativeQuery = new NativeQueryBuilder().build();
+        NativeQuery nativeQuery = new NativeQueryBuilder()
+                .withPageable(defaultPageable)
+                .build();
         return searchOperations.search(nativeQuery, BlogPostDocument.class);
     }
 
     @Override
-    public SearchHits<BlogPostDocument> searchBlogPostByKeyword(String keyword) {
-        NativeQuery nativeQuery = new NativeQueryBuilder()
-                .withQuery(q -> q.match(
-                        m -> m.field("title")
-                                .query(keyword))
-                )
-                .build();
-
-        return searchOperations.search(nativeQuery, BlogPostDocument.class);
+    public BlogPostDocument getBlogPostById(String id) {
+        var blogPostDocument = elasticsearchOperations.get(id, BlogPostDocument.class);
+        if (null == blogPostDocument) {
+            throw DocumentNotFoundException.of();
+        }
+        return blogPostDocument;
     }
 
     @Override
     public SearchHits<BlogPostDocument> searchBlogPostByKeywordAndPageNumberAndPageSize(String keyword, Integer pageNumber, Integer pageSize) {
-        int exactPageNumber = null == pageNumber ? 0 : Math.min(0, pageNumber);
-        int exactPageSize = null == pageSize ? 10 : Math.max(20, pageSize);
+        int exactPageNumber = null == pageNumber ? 0 : Math.max(0, pageNumber);
+        int exactPageSize = null == pageSize ? 20 : Math.min(20, pageSize);
         Sort sort = Sort.by(new Order(Sort.Direction.DESC, "_score"));
         Pageable pageable = PageRequest.of(exactPageNumber, exactPageSize, sort);
 
@@ -85,16 +82,13 @@ public class BlogPostSearchService implements IBlogPostSearchService {
 
     @Override
     public SearchHits<BlogPostDocument> searchBlogPostByTagList(List<String> tagList) {
-        logger.info("Tag List: {}", tagList);
-        logger.info("Field Name: {}", BlogPostDocument.Fields.tagList);
-
         BoolQuery.Builder boolQueryBuilder = new BoolQuery.Builder();
         boolQueryBuilder.minimumShouldMatch(String.valueOf(tagList.size()));
-        List<Query> industryQueries = tagList.stream().map(p -> {
+        List<Query> tagQueries = tagList.stream().map(p -> {
             TermQuery termQuery = new TermQuery.Builder().field(BlogPostDocument.Fields.tagList).value(p).build();
             return Query.of(q -> q.term(termQuery));
         }).toList();
-        boolQueryBuilder.should(industryQueries);
+        boolQueryBuilder.should(tagQueries);
 
         Sort sort = Sort.by(new Order(Sort.Direction.DESC, "_score"));
         Pageable pageable = PageRequest.of(0, 20, sort);
