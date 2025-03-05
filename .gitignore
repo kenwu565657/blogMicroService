@@ -39,3 +39,4 @@ build/
 ### secret
 **/.s3.secret.env
 **/.s3.secret.*.env
+**/.*.secret.env
