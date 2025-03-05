@@ -1,0 +1,2 @@
+com.contentfarm.kafka.springboot.starter.config.KafkaProducerConfiguration
+com.contentfarm.kafka.springboot.starter.config.KafkaConsumerConfiguration
