@@ -2,6 +2,7 @@ package com.contentfarm.kafka.springboot.starter.producer.impl;
 
 import com.contentfarm.kafka.springboot.starter.TestingConfiguration;
 import com.contentfarm.kafka.springboot.starter.TestingKafkaConsumer;
+import com.contentfarm.kafka.springboot.starter.constant.ContentFarmKafkaTopicConstant;
 import com.contentfarm.kafka.springboot.starter.producer.IBlogPostKafkaMessageProducer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -43,7 +44,7 @@ class BlogPostMessageProducerTest {
     @Test
     void send() throws InterruptedException {
         String data = "TestingMessage";
-        blogPostMessageProducer.send(data);
+        blogPostMessageProducer.send(ContentFarmKafkaTopicConstant.CONTENT_FARM_KAFKA_TOPIC, data);
 
         boolean messageConsumed = testingKafkaConsumer.getLatch().await(20, TimeUnit.SECONDS);
         Assertions.assertTrue(messageConsumed);
@@ -51,7 +52,7 @@ class BlogPostMessageProducerTest {
 
         testingKafkaConsumer.resetLatch();
         String data2 = "TestingMessage2";
-        blogPostMessageProducer.send(data2);
+        blogPostMessageProducer.send(ContentFarmKafkaTopicConstant.CONTENT_FARM_KAFKA_TOPIC, data2);
 
         messageConsumed = testingKafkaConsumer.getLatch().await(10, TimeUnit.SECONDS);
         Assertions.assertTrue(messageConsumed);
@@ -61,10 +62,10 @@ class BlogPostMessageProducerTest {
     @Test
     void send_2Message() {
         String data = "TestingMessage";
-        blogPostMessageProducer.send(data);
+        blogPostMessageProducer.send(ContentFarmKafkaTopicConstant.CONTENT_FARM_KAFKA_TOPIC, data);
 
         String data2 = "TestingMessage2";
-        blogPostMessageProducer.send(data2);
+        blogPostMessageProducer.send(ContentFarmKafkaTopicConstant.CONTENT_FARM_KAFKA_TOPIC, data2);
 
         Flux<String> receivedMessageQueue = testingKafkaConsumer.subsribe().delayElements(Duration.ofSeconds(5));
         StepVerifier.create(receivedMessageQueue)
