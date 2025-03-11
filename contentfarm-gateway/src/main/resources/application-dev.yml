@@ -1,6 +1,7 @@
 spring:
   application:
     name: contentfarm-gateway
+
   cloud:
     gateway:
       globalcors:
@@ -16,17 +17,22 @@ spring:
           enabled: true
       routes:
         - id: blogpost-service
-          uri: http://localhost:8081
+          uri: lb://blogpost-service
           predicates:
             - Path=/blogpost/**
         - id: multimedia-service
-          uri: http://localhost:8082
+          uri: lb://multimedia-service
           predicates:
             - Path=/multimedia/**
         - id: search-service
-          uri: http://localhost:8083
+          uri: lb://search-service
           predicates:
             - Path=/search/**
+        - id: admin-service
+          uri: lb://admin-service
+          predicates:
+            - Path=/admin/**
+
 eureka:
   client:
     register-with-eureka: true
@@ -47,5 +53,10 @@ springdoc:
         name: API Gateway Service
       - url: /blogpost-service/v3/api-docs
         name: Blog Service
+      - url: /multimedia-service/v3/api-docs
+        name: Multimedia Service
 
-
+logging:
+  level:
+    org.springframework.cloud.gateway: trace
+    org.springframework.security: trace
