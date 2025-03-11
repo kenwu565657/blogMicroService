@@ -1,11 +1,12 @@
 package com.contentfarm.multimedia;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
-@SpringBootApplication(scanBasePackages = {"com.contentfarm.multimedia"}, exclude = {DataSourceAutoConfiguration.class})
+@EnableDiscoveryClient
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class MultimediaServiceApplication {
 
     public static void main(String[] args) {
