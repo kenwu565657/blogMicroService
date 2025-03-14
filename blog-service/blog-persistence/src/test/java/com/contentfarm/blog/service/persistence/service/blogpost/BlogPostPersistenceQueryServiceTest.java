@@ -1,12 +1,12 @@
 package com.contentfarm.blog.service.persistence.service.blogpost;
 
+import com.contentfarm.blog.service.persistence.TestPostgreSQLContainer;
 import com.contentfarm.blog.service.persistence.dao.blogpost.BlogPostDao;
 import com.contentfarm.blog.service.persistence.dao.blogpost.BlogPostTagDao;
 import com.contentfarm.blog.service.persistence.entity.blogpost.BlogPostEntity;
 import com.contentfarm.blog.service.persistence.entity.blogpost.BlogPostTagEntity;
 import com.contentfarm.file.operation.springboot.starter.service.FileStorageService;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -15,12 +15,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.context.ImportTestcontainers;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.LocalDateTime;
 import java.util.HexFormat;
 import java.util.List;
 
+@ImportTestcontainers(TestPostgreSQLContainer.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(classes = {BlogPostPersistenceQueryServiceTestConfiguration.class})
 class BlogPostPersistenceQueryServiceTest {
