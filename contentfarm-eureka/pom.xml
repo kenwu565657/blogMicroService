@@ -33,7 +33,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <image>
-                        <name>contentfarm/${project.artifactId}:${project.version}</name>
+                        <name>${project.artifactId}:${project.version}</name>
                     </image>
                 </configuration>
                 <executions>

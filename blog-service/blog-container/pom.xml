@@ -86,7 +86,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<image>
-						<name>contentfarm/${project.parent.artifactId}:${project.parent.version}</name>
+						<name>contentfarm-${project.parent.artifactId}:${project.parent.version}</name>
 					</image>
 				</configuration>
 				<executions>
