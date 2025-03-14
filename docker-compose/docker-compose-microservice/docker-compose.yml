@@ -14,7 +14,7 @@ services:
         networks:
           - contentfarm-network
         ports:
-          - "8080:80"
+          - "8080:8080"
         env_file:
           - .env
         environment:
@@ -30,7 +30,7 @@ services:
         env_file:
           - .env
         environment:
-          CONTENTFARM_GATEWAY_URL: http://contentfarm-gateway:80
+          CONTENTFARM_GATEWAY_URL: http://contentfarm-gateway:8080
           SPRING_PROFILES_ACTIVE: prod
     admin-service:
         image: ${ADMIN_SERVICE_IMAGE}
