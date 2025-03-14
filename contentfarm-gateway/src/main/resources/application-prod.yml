@@ -5,7 +5,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:9000
+          issuer-uri: ${CONTENTFARM_AUTH_SERVER_URL}
   cloud:
     gateway:
       globalcors:
@@ -42,7 +42,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: ${CONTENTFARM_EUREKA_URL}
 
 springdoc:
   enable-native-support: true
