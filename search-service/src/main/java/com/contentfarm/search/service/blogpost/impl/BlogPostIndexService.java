@@ -38,6 +38,11 @@ public class BlogPostIndexService implements IBlogPostIndexService {
         }
     }
 
+    @Override
+    public void deleteDocument(String id) {
+        blogPostElasticsearchRepository.deleteById(id);
+    }
+
     private List<String> findMissingFieldList(BlogPostDocument blogPostDocument) {
         Map<String, String> fieldNamingMap = Map.of(
                 BlogPostDocument.Fields.id, "Id",

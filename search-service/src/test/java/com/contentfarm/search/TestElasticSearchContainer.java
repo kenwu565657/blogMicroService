@@ -1,5 +1,9 @@
 package com.contentfarm.search;
 
+import com.github.dockerjava.api.model.ExposedPort;
+import com.github.dockerjava.api.model.HostConfig;
+import com.github.dockerjava.api.model.PortBinding;
+import com.github.dockerjava.api.model.Ports;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
@@ -8,6 +12,8 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
+
+import java.time.Duration;
 
 @Testcontainers
 public class TestElasticSearchContainer {
@@ -19,12 +25,19 @@ public class TestElasticSearchContainer {
     public static ElasticsearchContainer container = new ElasticsearchContainer(
             DockerImageName.parse("docker.elastic.co/elasticsearch/elasticsearch:7.17.28"))
             //.withPassword("foobar")
-            .withReuse(false)
+            //.withReuse(false)
             .withExposedPorts(9200)
-            .withCopyFileToContainer(
-                    MountableFile.forClasspathResource("/testcontainer/init.sh", 744),
-                    "/init.sh"
-            );
+            .withEnv("xpack.security.enabled", "false")
+            .withEnv("ES_JAVA_OPTS", "-Xms256m -Xmx256m")
+            .withStartupTimeout(Duration.ofSeconds(30))
+            .withCreateContainerCmdModifier(cmd -> cmd.withHostConfig(
+                    new HostConfig().withPortBindings(new PortBinding(Ports.Binding.bindPort(9201), new ExposedPort(9200)))
+            ))
+            //.withCopyFileToContainer(
+            //        MountableFile.forClasspathResource("/testcontainer/init.sh", 744),
+            //        "/init.sh"
+            //)
+            ;
 
     /*
     @Configuration

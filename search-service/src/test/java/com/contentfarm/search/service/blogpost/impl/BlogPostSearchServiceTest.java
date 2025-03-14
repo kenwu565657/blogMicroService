@@ -37,6 +37,7 @@ class BlogPostSearchServiceTest {
     @BeforeAll
     void setUp() {
         var testingDocument = findTestingBlogPostDocument();
+        blogPostElasticsearchRepository.deleteAll();
         blogPostElasticsearchRepository.saveAll(testingDocument);
         template.indexOps(BlogPostDocument.class).refresh();
     }

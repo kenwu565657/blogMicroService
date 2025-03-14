@@ -38,6 +38,7 @@ class BlogPostSearchControllerTest {
     @BeforeAll
     void setUp() {
         var testingDocument = findTestingBlogPostDocument();
+        blogPostElasticsearchRepository.deleteAll();
         blogPostElasticsearchRepository.saveAll(testingDocument);
     }
 

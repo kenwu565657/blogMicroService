@@ -6,6 +6,7 @@ import com.contentfarm.search.exception.DocumentIndexException;
 import com.contentfarm.search.repository.blogpost.BlogPostElasticsearchRepository;
 import com.contentfarm.search.service.blogpost.IBlogPostIndexService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,11 @@ class BlogPostIndexServiceTest {
 
     @Autowired
     BlogPostElasticsearchRepository blogPostElasticsearchRepository;
+
+    @BeforeAll
+    void setUp() {
+        blogPostElasticsearchRepository.deleteAll();
+    }
 
     @Test
     @Order(1)
