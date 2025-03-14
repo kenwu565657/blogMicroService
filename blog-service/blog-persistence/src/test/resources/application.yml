@@ -4,6 +4,10 @@ spring:
       mode: always
   config:
     import: classpath:.s3.secret.env[.properties]
+  datasource:
+    url: jdbc:postgresql://localhost:5433/testing
+    username: postgres
+    password: postgres
 
 file:
   operation:

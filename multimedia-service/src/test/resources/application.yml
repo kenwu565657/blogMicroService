@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: multimedia-service
+  config:
+    import: classpath:.s3.secret.dev.env[.properties]
+
+springdoc:
+  api-docs:
+    path: /multimedia-service/v3/api-docs
+  swagger-ui:
+    path: /multimedia-service/swagger-ui.html
+
+file:
+  operation:
+    aws:
+      s3:
+        accessKey: ${AWS_S3_ACCESS_KEY}
+        secretKey: ${AWS_S3_SECRET_KEY}
+        region: ${AWS_S3_REGION}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: false
+    fetch-registry: false
