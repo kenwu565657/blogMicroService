@@ -1,10 +1,10 @@
-package com.contentfarm.blog.service.container;
+package com.contentfarm.auth.server;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BlogContainerApplicationTests {
+class ContentfarmAuthServerApplicationTests {
 
 	@Test
 	void contextLoads() {

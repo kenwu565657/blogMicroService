@@ -6,7 +6,6 @@
 		<groupId>com.contentfarm</groupId>
 		<artifactId>contentfarm-root</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<artifactId>contentfarm-auth-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -26,27 +25,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.contentfarm</groupId>
-			<artifactId>contentfarm-redis-spring-boot-starter</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-jdbc</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.contentfarm</groupId>
 			<artifactId>contentfarm-utils</artifactId>
-		</dependency>
-		<!--
-		<dependency>
-			<groupId>org.springframework.session</groupId>
-			<artifactId>spring-session-jdbc</artifactId>
-		</dependency>
-		-->
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.netty</groupId>
@@ -64,6 +43,20 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<image>
+						<name>contentfarm/${project.artifactId}:${project.version}</name>
+					</image>
+					<pullPolicy>IF_NOT_PRESENT</pullPolicy>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>build-image</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

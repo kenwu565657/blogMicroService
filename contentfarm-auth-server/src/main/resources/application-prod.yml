@@ -1,0 +1,32 @@
+server:
+  port: 9000
+
+spring:
+  #datasource:
+  #  url: jdbc:postgresql://localhost:5432/postgres
+  #  username: test
+  #  password: test
+  #sql:
+  #  init:
+  #    mode: always
+  security:
+    oauth2:
+      authorizationserver:
+        client:
+          contentfarm:
+            registration:
+              client-id: contentfarm-admin
+              client-secret: "{noop}123456"
+              client-authentication-methods:
+                - client_secret_basic
+              authorization-grant-types:
+                - client_credentials
+                - authorization_code
+                - refresh_token
+              redirect-uris:
+                - "http://${CONTENTFARM_GATEWAY_URL}/login/oauth2/code/contentfarm-admin"
+              scopes:
+                - profile
+                - admin.write
+                - admin.read
+                - openid
