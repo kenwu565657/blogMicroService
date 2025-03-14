@@ -25,6 +25,7 @@
 		<module>multimedia-service</module>
 		<module>search-service</module>
 		<module>admin-service</module>
+		<module>contentfarm-eureka</module>
 	</modules>
 	<properties>
 		<java.version>21</java.version>
