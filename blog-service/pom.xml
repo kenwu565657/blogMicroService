@@ -8,24 +8,52 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>blog-service</artifactId>
     <packaging>pom</packaging>
     <modules>
+        <module>blog-domain</module>
         <module>blog-container</module>
         <module>blog-web</module>
-        <module>blog-domain</module>
         <module>blog-persistence</module>
+        <module>blog-message-queue</module>
     </modules>
 
     <dependencies>
         <dependency>
             <groupId>com.contentfarm</groupId>
             <artifactId>contentfarm-utils</artifactId>
-            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.contentfarm</groupId>
+            <artifactId>contentfarm-pojo</artifactId>
         </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.contentfarm</groupId>
+                <artifactId>blog-domain</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.contentfarm</groupId>
+                <artifactId>blog-message-queue</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.contentfarm</groupId>
+                <artifactId>blog-persistence</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.contentfarm</groupId>
+                <artifactId>blog-web</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>

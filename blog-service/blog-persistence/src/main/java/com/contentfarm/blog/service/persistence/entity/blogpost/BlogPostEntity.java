@@ -1,9 +1,10 @@
 package com.contentfarm.blog.service.persistence.entity.blogpost;
 
-import jakarta.persistence.Basic;
+import com.contentfarm.constant.blogpost.BlogPostContentType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -27,22 +28,19 @@ public class BlogPostEntity {
     @Column(name = "TITLE")
     private String title;
 
-    @Basic(fetch = FetchType.LAZY)
-    //@Lob
-    @Column(name = "CONTENT")
-    private String content;
-
     @Column(name = "AUTHOR_ID")
     private String authorId;
 
-    //@Lob
-    @Column(name = "SUMMARY")
-    private String summary;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "CONTENT_TYPE")
+    private BlogPostContentType contentType;
+
+    @Column(name = "CONTENT_FILE_NAME")
+    private String contentFileName;
 
     @Column(name = "CREATED_DATE_TIME")
     private LocalDateTime createdDateTime;
 
     @Column(name = "LAST_UPDATED_DATE_TIME")
     private LocalDateTime lastUpdatedDateTime;
-
 }

@@ -10,4 +10,9 @@ import java.util.List;
 @Repository
 public interface BlogPostDao extends JpaRepository<BlogPostEntity, String>, JpaSpecificationExecutor<BlogPostEntity> {
     List<BlogPostEntity> findByAuthorId(String authorId);
+    ContentFileNameProjection getContentFileNameById(String id);
+
+    interface ContentFileNameProjection {
+        String getContentFileName();
+    }
 }

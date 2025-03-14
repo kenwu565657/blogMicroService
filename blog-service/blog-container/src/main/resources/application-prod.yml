@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: blogpost-service
+  datasource:
+    url: ${POSTGRESQL_JDBC_URL}
+    username: ${POSTGRESQL_USERNAME}
+    password: ${POSTGRESQL_PASSWORD}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${CONTENTFARM_AUTH_SERVER_URL}
+
+file:
+  operation:
+    aws:
+      s3:
+        accessKey: ${AWS_S3_ACCESS_KEY}
+        secretKey: ${AWS_S3_SECRET_KEY}
+        region: ${AWS_S3_REGION}
+
+springdoc:
+  api-docs:
+    path: /blogpost-service/v3/api-docs
+  swagger-ui:
+    path: /blogpost-service/swagger-ui.html
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${CONTENTFARM_EUREKA_URL}
+    register-with-eureka: true
+    fetch-registry: true
+
+logging:
+  level:
+    org.springframework.security: trace
+
+kafka:
+  producerBootstrapServer: ${KAFKA_URL}
+  consumerBootstrapServer: ${KAFKA_URL}

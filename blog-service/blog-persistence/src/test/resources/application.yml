@@ -1,0 +1,14 @@
+spring:
+  sql:
+    init:
+      mode: always
+  config:
+    import: classpath:.s3.secret.env[.properties]
+
+file:
+  operation:
+    aws:
+      s3:
+        accessKey: ${AWS_S3_ACCESS_KEY}
+        secretKey: ${AWS_S3_SECRET_KEY}
+        region: ${AWS_S3_REGION}

@@ -3,8 +3,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
+		<artifactId>blog-service</artifactId>
 		<groupId>com.contentfarm</groupId>
-		<artifactId>contentfarm-root</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
@@ -31,6 +31,10 @@
 			<artifactId>blog-persistence</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.contentfarm</groupId>
+			<artifactId>blog-message-queue</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.5.2</version>
@@ -43,7 +47,6 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-eureka</artifactId>
-			<version>1.4.7.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springdoc</groupId>
@@ -52,6 +55,14 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
 		</dependency>
 
 	</dependencies>
@@ -73,6 +84,19 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<image>
+						<name>contentfarm/${project.parent.artifactId}:${project.parent.version}</name>
+					</image>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>build-image</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
