@@ -6,11 +6,15 @@ spring:
       fail-on-empty-beans: false
 
 elasticsearch:
-  url: "localhost:9200"
+  url: ${ELASTICSEARCH_URL}
 
 eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: ${CONTENTFARM_EUREKA_URL}
+
+kafka:
+  producerBootstrapServer: ${KAFKA_URL}
+  consumerBootstrapServer: ${KAFKA_URL}
