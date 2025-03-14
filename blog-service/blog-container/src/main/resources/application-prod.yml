@@ -5,6 +5,9 @@ spring:
     url: ${POSTGRESQL_JDBC_URL}
     username: ${POSTGRESQL_USERNAME}
     password: ${POSTGRESQL_PASSWORD}
+  sql:
+    init:
+      mode: always
   security:
     oauth2:
       resourceserver:
