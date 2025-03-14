@@ -14,5 +14,7 @@
 
     <modules>
         <module>contentfarm-file-operation-spring-boot-starter</module>
+        <module>contentfarm-kafka-spring-boot-starter</module>
+        <module>contentfarm-redis-spring-boot-starter</module>
     </modules>
 </project>
