@@ -1,5 +1,6 @@
 package com.contentfarm.admin.config;
 
+import com.contentfarm.utils.ContentFarmStringUtils;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +13,14 @@ public class FeignConfig implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate requestTemplate) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (null == attributes) {
+            return;
+        }
         HttpServletRequest request = attributes.getRequest();
-        requestTemplate.header("Authorization", request.getHeader("Authorization"));
+        String token = request.getHeader("Authorization");
+        if (ContentFarmStringUtils.isBlank(token)) {
+            return;
+        }
+        requestTemplate.header("Authorization", token);
     }
 }
