@@ -20,7 +20,7 @@ public class KafkaProducerConfiguration {
     @Bean
     public ProducerFactory<String, String> producerFactory(KafkaProperty kafkaProperty) {
         Map<String, Object> props = new HashMap<>();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperty.getProducerBootstrapServer());
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperty.getProducerBootstrapServerOrElseDefaultValue());
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         return new DefaultKafkaProducerFactory<>(props);

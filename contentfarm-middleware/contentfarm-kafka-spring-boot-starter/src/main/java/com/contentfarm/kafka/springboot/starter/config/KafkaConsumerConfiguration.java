@@ -19,7 +19,7 @@ public class KafkaConsumerConfiguration {
     @Bean
     public ConsumerFactory<String, String> consumerFactory(KafkaProperty kafkaProperty) {
         Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperty.getConsumerBootstrapServer());
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperty.getConsumerBootstrapServerOrElseDefaultValue());
         //props.put(ConsumerConfig.GROUP_ID_CONFIG, "contentfarm-kafka-consumer");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
