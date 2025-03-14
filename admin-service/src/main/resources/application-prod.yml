@@ -1,0 +1,21 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${CONTENTFARM_AUTH_SERVER_URL}
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${CONTENTFARM_EUREKA_URL}
+
+kafka:
+  producerBootstrapServer: ${KAFKA_URL}
+  consumerBootstrapServer: ${KAFKA_URL}
+
+logging:
+  level:
+    org.springframework.security: trace

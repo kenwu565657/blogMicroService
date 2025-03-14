@@ -33,7 +33,6 @@
         <dependency>
             <groupId>com.contentfarm</groupId>
             <artifactId>contentfarm-kafka-spring-boot-starter</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.contentfarm</groupId>
@@ -42,7 +41,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
-            <version>3.4.3</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -51,7 +49,6 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-eureka</artifactId>
-            <version>1.4.7.RELEASE</version>
         </dependency>
     </dependencies>
 
@@ -72,6 +69,20 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <image>
+                        <name>contentfarm/${project.artifactId}:latest</name>
+                    </image>
+                    <pullPolicy>IF_NOT_PRESENT</pullPolicy>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>build-image</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
