@@ -33,10 +33,11 @@ build/
 .vscode/
 
 ### Docker
-/docker-compose/data/
-/docker-compose/logs/
+/docker-compose/docker-compose-middleware/data/
+/docker-compose/docker-compose-middleware/logs/
 
 ### secret
 **/.s3.secret.env
 **/.s3.secret.*.env
 **/.*.secret.env
+**/secret.env

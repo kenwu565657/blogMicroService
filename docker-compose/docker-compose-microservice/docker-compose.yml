@@ -1,0 +1,120 @@
+services:
+    contentfarm-eureka:
+        image: ${CONTENTFARM_EUREKA_IMAGE}
+        networks:
+          - contentfarm-network
+        ports:
+          - "8761:8761"
+        env_file:
+          - .env
+    contentfarm-gateway:
+        image: ${CONTENTFARM_GATEWAY_IMAGE}
+        depends_on:
+          - contentfarm-eureka
+        networks:
+          - contentfarm-network
+        ports:
+          - "8080:80"
+        env_file:
+          - .env
+        environment:
+          CONTENTFARM_AUTH_SERVER_URL: http://contentfarm-auth-server:9000
+          CONTENTFARM_EUREKA_URL: http://contentfarm-eureka:8761/eureka
+          SPRING_PROFILES_ACTIVE: prod
+    contentfarm-auth-server:
+        image: ${CONTENTFARM_AUTH_SERVER_IMAGE}
+        networks:
+          - contentfarm-network
+        ports:
+          - "9000:9000"
+        env_file:
+          - .env
+        environment:
+          CONTENTFARM_GATEWAY_URL: http://contentfarm-gateway:80
+          SPRING_PROFILES_ACTIVE: prod
+    admin-service:
+        image: ${ADMIN_SERVICE_IMAGE}
+        depends_on:
+          - contentfarm-eureka
+          - contentfarm-auth-server
+        networks:
+          - contentfarm-network
+          - kafka-network
+        ports:
+          - "8087:8087"
+        env_file:
+          - .env
+        environment:
+          CONTENTFARM_EUREKA_URL: http://contentfarm-eureka:8761/eureka
+          CONTENTFARM_AUTH_SERVER_URL: http://contentfarm-auth-server:9000
+          KAFKA_URL: kafka:9092
+          SPRING_PROFILES_ACTIVE: prod
+    blog-service:
+      image: ${BLOG_SERVICE_IMAGE}
+      depends_on:
+        - contentfarm-eureka
+        - contentfarm-auth-server
+      networks:
+        - contentfarm-network
+        - postgres-network
+        - kafka-network
+      ports:
+        - "8081:8081"
+      environment:
+        KAFKA_URL: kafka:9092
+        CONTENTFARM_EUREKA_URL: http://contentfarm-eureka:8761/eureka
+        CONTENTFARM_AUTH_SERVER_URL: http://contentfarm-auth-server:9000
+        POSTGRESQL_JDBC_URL: jdbc:postgresql://postgres:5432/postgres
+        POSTGRESQL_USERNAME: test
+        POSTGRESQL_PASSWORD: test
+        AWS_S3_ACCESS_KEY: ${AWS_S3_ACCESS_KEY} # from .secret.env
+        AWS_S3_SECRET_KEY: ${AWS_S3_SECRET_KEY} # from .secret.env
+        AWS_S3_REGION: ${AWS_S3_REGION} # from .secret.env
+        SPRING_PROFILES_ACTIVE: prod
+    multimedia-service:
+      image: ${MULTIMEDIA_SERVICE_IMAGE}
+      depends_on:
+        - contentfarm-eureka
+      networks:
+        - contentfarm-network
+      ports:
+        - "8082:8082"
+      environment:
+        CONTENTFARM_EUREKA_URL: http://contentfarm-eureka:8761/eureka
+        AWS_S3_ACCESS_KEY: ${AWS_S3_ACCESS_KEY} # from .secret.env
+        AWS_S3_SECRET_KEY: ${AWS_S3_SECRET_KEY} # from .secret.env
+        AWS_S3_REGION: ${AWS_S3_REGION} # from .secret.env
+        SPRING_PROFILES_ACTIVE: prod
+    search-service:
+      image: ${SEARCH_SERVICE_IMAGE}
+      depends_on:
+        - contentfarm-eureka
+      networks:
+        - contentfarm-network
+        - elasticsearch-network
+        - kafka-network
+      ports:
+        - "8083:8083"
+      env_file:
+        - .env
+      environment:
+        CONTENTFARM_EUREKA_URL: http://contentfarm-eureka:8761/eureka
+        ELASTICSEARCH_URL: elasticsearch:9200
+        KAFKA_URL: kafka:9092
+        SPRING_PROFILES_ACTIVE: prod
+
+networks:
+    contentfarm-network:
+      driver: bridge
+    postgres-network:
+      name: ${CONTENTFARM_MIDDLEWARE_COMPOSE_PROJECT_NAME}_postgres-network
+      external: true
+    elasticsearch-network:
+      name: ${CONTENTFARM_MIDDLEWARE_COMPOSE_PROJECT_NAME}_elasticsearch-network
+      external: true
+    kafka-network:
+      name: ${CONTENTFARM_MIDDLEWARE_COMPOSE_PROJECT_NAME}_kafka-network
+      external: true
+    redis-network:
+      name: ${CONTENTFARM_MIDDLEWARE_COMPOSE_PROJECT_NAME}_redis-network
+      external: true
