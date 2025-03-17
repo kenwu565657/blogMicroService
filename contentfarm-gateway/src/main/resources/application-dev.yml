@@ -1,3 +1,5 @@
+server:
+  port: 8080
 spring:
   application:
     name: contentfarm-gateway
@@ -16,6 +18,7 @@ spring:
             allowed-methods:
               - GET
               - POST
+              - DELETE
       discovery:
         locator:
           enabled: true

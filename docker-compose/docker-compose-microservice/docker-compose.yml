@@ -14,10 +14,11 @@ services:
         networks:
           - contentfarm-network
         ports:
-          - "8080:8080"
+          - ${CONTENTFARM_GATEWAY_SERVER_PORT}:${CONTENTFARM_GATEWAY_SERVER_PORT}
         env_file:
           - .env
         environment:
+          CONTENTFARM_GATEWAY_SERVER_PORT: ${CONTENTFARM_GATEWAY_SERVER_PORT}
           CONTENTFARM_AUTH_SERVER_URL: http://contentfarm-auth-server:9000
           CONTENTFARM_EUREKA_URL: http://contentfarm-eureka:8761/eureka
           SPRING_PROFILES_ACTIVE: prod
@@ -30,7 +31,7 @@ services:
         env_file:
           - .env
         environment:
-          CONTENTFARM_GATEWAY_URL: http://contentfarm-gateway:8080
+          CONTENTFARM_GATEWAY_URL: http://contentfarm-gateway:${CONTENTFARM_GATEWAY_SERVER_PORT}
           SPRING_PROFILES_ACTIVE: prod
     admin-service:
         image: ${ADMIN_SERVICE_IMAGE}
