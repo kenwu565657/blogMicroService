@@ -17,3 +17,7 @@ eureka:
 logging:
   level:
     org.springframework.security: trace
+
+kafka:
+  producerBootstrapServer: localhost:9093
+  consumerBootstrapServer: localhost:9093
