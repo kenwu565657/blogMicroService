@@ -3,11 +3,13 @@ package com.contentfarm.blog.service.domain.domainservice.blogpost;
 import com.contentfarm.blog.service.domain.aggregateroot.blogpost.BlogPostDomainModel;
 import com.contentfarm.blog.service.domain.outputport.persistence.IBlogPostPersistenceCommandService;
 import com.contentfarm.blog.service.domain.outputport.persistence.IBlogPostPersistenceQueryService;
+import com.contentfarm.constant.blogpost.BlogPostContentType;
 import com.contentfarm.utils.ContentFarmStringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.HexFormat;
 import java.util.List;
 import java.util.Objects;
@@ -26,6 +28,25 @@ class BlogPostDomainServiceTest {
     }
 
     @Test
+    void getBlogPostById() {
+        var blogPostDomainModel = blogPostDomainService.getBlogPostById("testingId1");
+        Assertions.assertNotNull(blogPostDomainModel);
+        Assertions.assertEquals("testingId1", blogPostDomainModel.getId());
+        Assertions.assertEquals("testingTitle1", blogPostDomainModel.getTitle());
+        Assertions.assertEquals("testingSummary1", blogPostDomainModel.getSummary());
+        Assertions.assertEquals("testingContent1", blogPostDomainModel.getContent());
+        Assertions.assertEquals("testingAuthorId1", blogPostDomainModel.getAuthorId());
+        Assertions.assertEquals(List.of("Java", "SpringBoot", "Unit testing"), blogPostDomainModel.getTagList());
+        Assertions.assertEquals("testing.jpg", blogPostDomainModel.getCoverImageUrl());
+        Assertions.assertEquals(BlogPostContentType.MARKDOWN, blogPostDomainModel.getContentType());
+        Assertions.assertEquals("testing1.md", blogPostDomainModel.getContentFileName());
+        Assertions.assertEquals(LocalDateTime.of(2025, 3, 18, 0, 0, 0), blogPostDomainModel.getCreatedDateTime());
+
+        var expectNullBlogPostDomainModel = blogPostDomainService.getBlogPostById("nonExistingId");
+        Assertions.assertNull(expectNullBlogPostDomainModel);
+    }
+
+    @Test
     void findBlogPostByAuthorId() {
         var blogPostDomainModelList1 = blogPostDomainService.findBlogPostByAuthorId("testingAuthorId1");
         assertEquals(2, blogPostDomainModelList1.size());
@@ -38,31 +59,31 @@ class BlogPostDomainServiceTest {
     }
 
     @Test
-    void getBlogPostContentByKey() {
-        var blogPostContent = blogPostDomainService.getBlogPostContentByKey("testing1.md");
+    void getBlogPostContentAsHtmlByFileName() {
+        var blogPostContent = blogPostDomainService.getBlogPostContentAsHtmlByFileName("testing1.md");
         Assertions.assertNotNull(blogPostContent);
         Assertions.assertFalse(ContentFarmStringUtils.isBlank(blogPostContent));
 
-        blogPostContent = blogPostDomainService.getBlogPostContentByKey("testing2.md");
+        blogPostContent = blogPostDomainService.getBlogPostContentAsHtmlByFileName("testing2.md");
         Assertions.assertNotNull(blogPostContent);
         Assertions.assertFalse(ContentFarmStringUtils.isBlank(blogPostContent));
 
-        blogPostContent = blogPostDomainService.getBlogPostContentByKey("testing3.md");
+        blogPostContent = blogPostDomainService.getBlogPostContentAsHtmlByFileName("testing3.md");
         Assertions.assertNotNull(blogPostContent);
         Assertions.assertFalse(ContentFarmStringUtils.isBlank(blogPostContent));
     }
 
     @Test
-    void getBlogPostContentAsMarkdownByKey() {
-        var blogPostContent = blogPostDomainService.getBlogPostContentAsMarkdownByKey("testing1.md");
+    void getBlogPostContentAsMarkdownByFileName() {
+        var blogPostContent = blogPostDomainService.getBlogPostContentAsMarkdownByFileName("testing1.md");
         Assertions.assertNotNull(blogPostContent);
         Assertions.assertTrue(blogPostContent.length > 0);
 
-        blogPostContent = blogPostDomainService.getBlogPostContentAsMarkdownByKey("testing2.md");
+        blogPostContent = blogPostDomainService.getBlogPostContentAsMarkdownByFileName("testing2.md");
         Assertions.assertNotNull(blogPostContent);
         Assertions.assertTrue(blogPostContent.length > 0);
 
-        blogPostContent = blogPostDomainService.getBlogPostContentAsMarkdownByKey("testing3.md");
+        blogPostContent = blogPostDomainService.getBlogPostContentAsMarkdownByFileName("testing3.md");
         Assertions.assertNotNull(blogPostContent);
         Assertions.assertTrue(blogPostContent.length > 0);
     }
@@ -120,10 +141,26 @@ class BlogPostDomainServiceTest {
         private final List<String> validKeyList = List.of("testing1.md", "testing2.md", "testing3.md");
         private final List<String> tagList = List.of("Java", "SpringBoot", "Unit testing");
         private final List<BlogPostDomainModel> blogPostDomainModelList = List.of(
-                BlogPostDomainModel.builder().id("testingId1").authorId("testingAuthorId1").build(),
+                BlogPostDomainModel.builder()
+                        .id("testingId1")
+                        .title("testingTitle1")
+                        .summary("testingSummary1")
+                        .content("testingContent1")
+                        .authorId("testingAuthorId1")
+                        .tagList(tagList)
+                        .coverImageUrl("testing.jpg")
+                        .contentType(BlogPostContentType.MARKDOWN)
+                        .contentFileName("testing1.md")
+                        .createdDateTime(LocalDateTime.of(2025, 3, 18, 0, 0, 0))
+                        .build(),
                 BlogPostDomainModel.builder().id("testingId2").authorId("testingAuthorId2").build(),
                 BlogPostDomainModel.builder().id("testingId3").authorId("testingAuthorId1").build()
         );
+
+        @Override
+        public BlogPostDomainModel getById(String id) {
+            return blogPostDomainModelList.stream().filter(x -> x.getId().equals(id)).findFirst().orElse(null);
+        }
 
         @Override
         public List<BlogPostDomainModel> findByAuthorId(String authorId) {

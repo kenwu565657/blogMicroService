@@ -5,6 +5,7 @@ import com.contentfarm.blog.service.domain.aggregateroot.blogpost.BlogPostDomain
 import java.util.List;
 
 public interface IBlogPostPersistenceQueryService {
+    BlogPostDomainModel getById(String id);
     List<BlogPostDomainModel> findByAuthorId(String authorId);
     byte[] getBlogPostContentByKey(String key);
     List<String> findTagList();

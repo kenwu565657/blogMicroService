@@ -4,6 +4,7 @@ import com.contentfarm.blog.service.domain.inputport.web.blogpost.IBlogPostWebDo
 import com.contentfarm.blog.service.domain.inputport.web.tag.IBlogPostTagWebDomainService;
 import com.contentfarm.blog.service.web.mapper.blogpost.BlogPostMapper;
 import com.contentfarm.dto.blogpost.BlogPostSummaryDto;
+import com.contentfarm.exception.NotFoundByIdException;
 import com.contentfarm.feign.feign.BlogPostServiceFeign;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +26,16 @@ public class BlogPostController implements BlogPostServiceFeign {
     private final BlogPostMapper blogPostMapper;
 
     @Override
+    @GetMapping(path= "/{blogpostId}", produces = "application/json")
+    public BlogPostSummaryDto getBlogPostSummaryById(@PathVariable("blogpostId") String blogpostId) {
+        var blogPostDomainModel = blogPostDomainService.getBlogPostById(blogpostId);
+        if (null == blogPostDomainModel) {
+            throw NotFoundByIdException.of(blogpostId);
+        }
+        return blogPostMapper.toBlogPostSummaryDto(blogPostDomainModel);
+    }
+
+    @Override
     @GetMapping(path = "/list", produces = "application/json")
     public List<BlogPostSummaryDto> findBlogPostSummary() {
         var blogpostDomainModelList = blogPostDomainService.findBlogPostByAuthorId("testingAuthorId1");
@@ -32,15 +43,9 @@ public class BlogPostController implements BlogPostServiceFeign {
     }
 
     @Override
-    @GetMapping(path = "/content/{blogpostId}", produces = "text/html")
-    public String getBlogPostContentByBlogPostId(@PathVariable("blogpostId") String blogpostId) {
-        return blogPostDomainService.getBlogPostContentByKey(blogpostId);
-    }
-
-    @Override
     @GetMapping(path = "/content/markdown/{blogpostId}", produces = "text/markdown")
     public byte[] getBlogPostContentAsMarkdownFileByBlogPostId(@PathVariable("blogpostId") String blogpostId) {
-        return blogPostDomainService.getBlogPostContentAsMarkdownByKey(blogpostId);
+        return blogPostDomainService.getBlogPostContentAsMarkdownById(blogpostId);
     }
 
     @Override

@@ -23,6 +23,12 @@ public class BlogPostPersistenceQueryService implements IBlogPostPersistenceQuer
     private final FileStorageService fileStorageService;
 
     @Override
+    public BlogPostDomainModel getById(String id) {
+        var blogPostEntity = blogPostDao.getReferenceById(id);
+        return blogPostDomainModelMapper.mapToBlogPostDomainModel(blogPostEntity);
+    }
+
+    @Override
     public List<BlogPostDomainModel> findByAuthorId(String authorId) {
         var blogPostEntityList = blogPostDao.findByAuthorId(authorId);
         return blogPostDomainModelMapper.mapToBlogPostDomainModels(blogPostEntityList);

@@ -15,8 +15,6 @@ import org.springframework.boot.testcontainers.context.ImportTestcontainers;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @ImportTestcontainers(TestPostgreSQLContainer.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

@@ -24,13 +24,18 @@ public class BlogPostDomainService implements IBlogPostWebDomainService, IBlogPo
     }
 
     @Override
-    public String getBlogPostContentByKey(String key) {
-        byte[] blogPostContent = getBlogPostContentAsMarkdownByKey(key);
+    public BlogPostDomainModel getBlogPostById(String id) {
+        return blogPostPersistenceQueryService.getById(id);
+    }
+
+    @Override
+    public String getBlogPostContentAsHtmlByFileName(String key) {
+        byte[] blogPostContent = getBlogPostContentAsMarkdownByFileName(key);
         return ContentFarmFileTypeConvertUtils.markdownToHtml(new String(blogPostContent, StandardCharsets.UTF_8));
     }
 
     @Override
-    public byte[] getBlogPostContentAsMarkdownByKey(String key) {
+    public byte[] getBlogPostContentAsMarkdownByFileName(String key) {
         return blogPostPersistenceQueryService.getBlogPostContentByKey(key);
     }
 

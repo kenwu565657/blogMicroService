@@ -96,6 +96,11 @@ class BlogPostTagDomainServiceTest {
         );
 
         @Override
+        public BlogPostDomainModel getById(String id) {
+            return blogPostDomainModelList.stream().filter(x -> x.getId().equals(id)).findFirst().orElse(null);
+        }
+
+        @Override
         public List<BlogPostDomainModel> findByAuthorId(String authorId) {
             return blogPostDomainModelList.stream().filter(x -> x.getAuthorId().equals(authorId)).collect(Collectors.toList());
         }

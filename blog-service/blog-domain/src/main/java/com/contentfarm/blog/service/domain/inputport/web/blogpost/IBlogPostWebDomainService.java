@@ -7,9 +7,11 @@ import java.util.List;
 public interface IBlogPostWebDomainService {
     List<BlogPostDomainModel> findBlogPostByAuthorId(String authorId);
 
-    String getBlogPostContentByKey(String key);
+    BlogPostDomainModel getBlogPostById(String id);
 
-    byte[] getBlogPostContentAsMarkdownByKey(String key);
+    String getBlogPostContentAsHtmlByFileName(String fileName);
+
+    byte[] getBlogPostContentAsMarkdownByFileName(String key);
 
     byte[] getBlogPostContentAsMarkdownById(String Id);
 }

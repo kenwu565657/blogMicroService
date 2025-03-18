@@ -12,11 +12,12 @@ import java.util.List;
 
 @FeignClient(contextId = "blogpost-service", name = "blogpost-service", path = "/blogpost")
 public interface BlogPostServiceFeign {
+
+    @GetMapping(path= "/{blogpostId}", produces = "application/json")
+    BlogPostSummaryDto getBlogPostSummaryById(@PathVariable("blogpostId") String blogpostId);
+
     @GetMapping(path = "/list", produces = "application/json")
     List<BlogPostSummaryDto> findBlogPostSummary();
-
-    @GetMapping(path = "/content/{blogpostId}", produces = "text/html")
-    String getBlogPostContentByBlogPostId(@PathVariable("blogpostId") String blogpostId);
 
     @GetMapping(path = "/content/markdown/{blogpostId}", produces = "text/markdown")
     byte[] getBlogPostContentAsMarkdownFileByBlogPostId(@PathVariable("blogpostId") String blogpostId);

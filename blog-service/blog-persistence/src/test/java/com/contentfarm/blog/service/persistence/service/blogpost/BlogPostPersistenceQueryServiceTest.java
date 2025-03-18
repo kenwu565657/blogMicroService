@@ -11,8 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.context.ImportTestcontainers;
@@ -26,8 +24,6 @@ import java.util.List;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(classes = {BlogPostPersistenceQueryServiceTestConfiguration.class})
 class BlogPostPersistenceQueryServiceTest {
-
-    private static final Logger logger = LoggerFactory.getLogger(BlogPostPersistenceQueryServiceTest.class);
 
     @Autowired
     private BlogPostPersistenceQueryService blogPostPersistenceQueryService;
@@ -45,6 +41,9 @@ class BlogPostPersistenceQueryServiceTest {
     void beforeEach() {
         var testingBlogPostDataList = getTestingBlogPostEntityDataList();
         Mockito.when(blogPostDao.findAll()).thenReturn(testingBlogPostDataList);
+        Mockito.when(blogPostDao.getReferenceById("testingId1")).thenReturn(testingBlogPostDataList.getFirst());
+        Mockito.when(blogPostDao.getReferenceById("testingId2")).thenReturn(testingBlogPostDataList.get(1));
+        Mockito.when(blogPostDao.getReferenceById("testingId3")).thenReturn(testingBlogPostDataList.get(2));
         Mockito.when(blogPostDao.getContentFileNameById("testingId1")).thenReturn(new ContentFileNameProjectionStub("testingFileName1.md"));
         Mockito.when(blogPostDao.getContentFileNameById("testingId2")).thenReturn(new ContentFileNameProjectionStub("testingFileName2.md"));
         Mockito.when(blogPostDao.getContentFileNameById("testingId3")).thenReturn(new ContentFileNameProjectionStub("testingFileName3.md"));
@@ -55,6 +54,22 @@ class BlogPostPersistenceQueryServiceTest {
         Mockito.when(fileStorageService.downloadFile("contentfarmblogpost", "blog-post-content/testingFileName1.md")).thenReturn(HexFormat.of().parseHex("e04fd020ea3a6910a2d808002b30309d"));
         Mockito.when(fileStorageService.downloadFile("contentfarmblogpost", "blog-post-content/testingFileName2.md")).thenReturn(HexFormat.of().parseHex("e04fd020ea3a6910a2d808002b30309d"));
         Mockito.when(fileStorageService.downloadFile("contentfarmblogpost", "blog-post-content/testingFileName3.md")).thenReturn(HexFormat.of().parseHex("e04fd020ea3a6910a2d808002b30309d"));
+    }
+
+    @Test
+    void getById() {
+        String id1 = "testingId1";
+        String id2 = "testingId2";
+        String id3 = "testingId3";
+        var blogPostEntity = blogPostPersistenceQueryService.getById(id1);
+        Assertions.assertNotNull(blogPostEntity);
+        Assertions.assertEquals(id1, blogPostEntity.getId());
+        blogPostEntity = blogPostPersistenceQueryService.getById(id2);
+        Assertions.assertNotNull(blogPostEntity);
+        Assertions.assertEquals(id2, blogPostEntity.getId());
+        blogPostEntity = blogPostPersistenceQueryService.getById(id3);
+        Assertions.assertNotNull(blogPostEntity);
+        Assertions.assertEquals(id3, blogPostEntity.getId());
     }
 
     @Test

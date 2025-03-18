@@ -29,19 +29,13 @@ class BlogPostDaoTest {
 
     @BeforeAll
     void beforeAll() {
+        blogPostDao.deleteAll();
         var testingData = getTestingDataList();
         blogPostDao.saveAll(testingData);
         var result = blogPostDao.count();
         numberOfRecords = Math.toIntExact(result);
         logger.info("Number of records: {}", numberOfRecords);
     }
-
-    /*
-    @BeforeEach
-    void setup() {
-        blogPostDao.deleteAll();
-    }
-     */
 
     @Test
     void testGetBlogPostById() {

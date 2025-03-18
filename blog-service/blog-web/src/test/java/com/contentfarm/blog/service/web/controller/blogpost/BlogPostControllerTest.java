@@ -4,7 +4,9 @@ import com.contentfarm.blog.service.domain.aggregateroot.blogpost.BlogPostDomain
 import com.contentfarm.blog.service.domain.inputport.web.blogpost.IBlogPostWebDomainService;
 import com.contentfarm.blog.service.domain.inputport.web.tag.IBlogPostTagWebDomainService;
 import com.contentfarm.blog.service.web.mapper.blogpost.BlogPostMapper;
+import com.contentfarm.constant.blogpost.BlogPostContentType;
 import com.contentfarm.dto.blogpost.BlogPostSummaryDto;
+import com.contentfarm.exception.NotFoundByIdException;
 import com.contentfarm.utils.ContentFarmFileTypeConvertUtils;
 import com.contentfarm.utils.ContentFarmStringUtils;
 import org.junit.jupiter.api.Assertions;
@@ -16,6 +18,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HexFormat;
 import java.util.List;
@@ -41,16 +44,23 @@ class BlogPostControllerTest {
 
     @Order(2)
     @Test
-    void getBlogPostContentByBlogPostId() {
-        var blogPostContent = blogPostController.getBlogPostContentByBlogPostId("testing1.md");
-        Assertions.assertNotNull(blogPostContent);
-        Assertions.assertFalse(ContentFarmStringUtils.isBlank(blogPostContent));
+    void getBlogPostSummaryById() {
+        var blogpostModel = blogPostController.getBlogPostSummaryById("testingId1");
+        Assertions.assertNotNull(blogpostModel);
+        Assertions.assertEquals("testingId1", blogpostModel.getId());
+    }
+
+    @Order(2)
+    @Test
+    void getBlogPostSummaryById_notExistingId() {
+        var notFoundException = Assertions.assertThrows(NotFoundByIdException.class, () -> blogPostController.getBlogPostSummaryById("not-existingId"));
+        Assertions.assertEquals("Not Found By Id: not-existingId.", notFoundException.getMessage());
     }
 
     @Order(3)
     @Test
     void getBlogPostContentAsMarkdownFileByBlogPostId() {
-        var blogPostContent = blogPostController.getBlogPostContentAsMarkdownFileByBlogPostId("testing1.md");
+        var blogPostContent = blogPostController.getBlogPostContentAsMarkdownFileByBlogPostId("testingId1");
         Assertions.assertNotNull(blogPostContent);
         Assertions.assertTrue(blogPostContent.length > 0);
     }
@@ -87,7 +97,18 @@ class BlogPostControllerTest {
         private final List<String> validKeyList = List.of("testing1.md", "testing2.md", "testing3.md");
         private final List<String> tagList = new ArrayList<>();
         private final List<BlogPostDomainModel> blogPostDomainModelList = List.of(
-                BlogPostDomainModel.builder().id("testingId1").authorId("testingAuthorId1").build(),
+                BlogPostDomainModel.builder()
+                        .id("testingId1")
+                        .title("testingTitle1")
+                        .summary("testingSummary1")
+                        .content("testingContent1")
+                        .authorId("testingAuthorId1")
+                        .tagList(List.of("Java", "SpringBoot", "Unit testing"))
+                        .coverImageUrl("testing.jpg")
+                        .contentType(BlogPostContentType.MARKDOWN)
+                        .contentFileName("testing1.md")
+                        .createdDateTime(LocalDateTime.of(2025, 3, 18, 0, 0, 0))
+                        .build(),
                 BlogPostDomainModel.builder().id("testingId2").authorId("testingAuthorId2").build(),
                 BlogPostDomainModel.builder().id("testingId3").authorId("testingAuthorId1").build()
         );
@@ -98,7 +119,12 @@ class BlogPostControllerTest {
         }
 
         @Override
-        public String getBlogPostContentByKey(String key) {
+        public BlogPostDomainModel getBlogPostById(String id) {
+            return blogPostDomainModelList.stream().filter(x -> x.getId().equals(id)).findFirst().orElse(null);
+        }
+
+        @Override
+        public String getBlogPostContentAsHtmlByFileName(String key) {
             if (validKeyList.contains(key)) {
                 return ContentFarmFileTypeConvertUtils.markdownToHtml(new String(defaultByteArray, StandardCharsets.UTF_8));
             }
@@ -106,7 +132,7 @@ class BlogPostControllerTest {
         }
 
         @Override
-        public byte[] getBlogPostContentAsMarkdownByKey(String key) {
+        public byte[] getBlogPostContentAsMarkdownByFileName(String key) {
             if (validKeyList.contains(key)) {
                 return defaultByteArray;
             }
